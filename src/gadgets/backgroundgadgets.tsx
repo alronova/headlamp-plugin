@@ -6,7 +6,7 @@ import {
   SectionBox,
   Table,
 } from '@kinvolk/headlamp-plugin/lib/CommonComponents';
-import K8s from '@kinvolk/headlamp-plugin/lib/K8s';
+import { K8s } from '@kinvolk/headlamp-plugin';
 import { getCluster } from '@kinvolk/headlamp-plugin/lib/Utils';
 import { Button } from '@mui/material';
 import { Box, Tooltip } from '@mui/material';
@@ -90,7 +90,7 @@ export function BackgroundRunning({ embedDialogOpen = false }) {
         updatedInstances = updatedInstances.filter(i => i.id !== id);
       } else {
         ig.deleteGadgetInstance(
-          id,
+          id as string,
           () => {},
           err => {
             console.error('Error deleting instance:', err);

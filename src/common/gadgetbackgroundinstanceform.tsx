@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import K8s from '@kinvolk/headlamp-plugin/lib/K8s';
+import { K8s } from '@kinvolk/headlamp-plugin';
 import { getCluster } from '@kinvolk/headlamp-plugin/lib/Utils';
 import {
   Box,

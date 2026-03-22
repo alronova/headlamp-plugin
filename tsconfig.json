@@ -1,4 +1,9 @@
 {
   "extends": "./node_modules/@kinvolk/headlamp-plugin/config/plugins-tsconfig.json",
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "compilerOptions": {
+    "paths": {
+      "@kinvolk/headlamp-plugin": ["./node_modules/@kinvolk/headlamp-plugin/lib/index.d.ts"]
+    }
+  }
 }

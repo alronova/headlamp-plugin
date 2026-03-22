@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { ConfirmDialog, DateLabel, Table } from '@kinvolk/headlamp-plugin/lib/CommonComponents';
-import K8s from '@kinvolk/headlamp-plugin/lib/K8s';
+import { K8s } from '@kinvolk/headlamp-plugin';
 import { getCluster } from '@kinvolk/headlamp-plugin/lib/Utils';
 import {
   Accordion,
@@ -123,14 +123,14 @@ const RunningGadgetsForResource = ({ resource, open }) => {
   const groupedInstances = useMemo(() => {
     if (!gadgetInstances) return {};
 
-    return gadgetInstances.reduce((acc, instance) => {
+    return gadgetInstances.reduce((acc: Record<string, any[]>, instance) => {
       const imageName = instance.gadgetConfig.imageName;
       if (!acc[imageName]) {
         acc[imageName] = [];
       }
       acc[imageName].push(instance);
       return acc;
-    }, {});
+    }, {} as Record<string, any[]>);
   }, [gadgetInstances]);
 
   if (!gadgetInstances || gadgetInstances.length === 0) return null;
@@ -148,7 +148,7 @@ const RunningGadgetsForResource = ({ resource, open }) => {
       />
 
       {/* Grouped Instances */}
-      {Object.entries(groupedInstances).map(([imageName, instances]) => (
+      {(Object.entries(groupedInstances) as [string, any[]][]).map(([imageName, instances]) => (
         <Box key={imageName} sx={{ mb: 2 }}>
           <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
             {imageName} ({instances.length})

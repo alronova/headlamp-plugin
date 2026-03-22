@@ -16,7 +16,7 @@ const SortingFilter = ({ param, config, gadgetConfig }) => {
     if (!gadgetInfo) return [];
 
     const tmpFields = [];
-    Object.values(gadgetInfo).forEach(ds => {
+    Object.values(gadgetInfo as Record<string, { name: string; fields: { fullName: string; name: string }[] }>).forEach(ds => {
       ds.fields.forEach(f => {
         tmpFields.push({ ds: ds.name, field: f.fullName, display: `${ds.name}.${f.fullName}` });
       });
@@ -25,7 +25,7 @@ const SortingFilter = ({ param, config, gadgetConfig }) => {
   }, []);
 
   useEffect(() => {
-    const dataSources = {};
+    const dataSources: Record<string, any[]> = {};
     filters.forEach(f => {
       dataSources[f.field.ds] = [...(dataSources[f.field.ds] || []), f];
     });
