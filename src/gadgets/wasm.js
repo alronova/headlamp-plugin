@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable no-param-reassign, eqeqeq, no-unused-vars */
+
 'use strict';
 
 (() => {
