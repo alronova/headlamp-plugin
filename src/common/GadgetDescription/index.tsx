@@ -179,6 +179,7 @@ export function GadgetDescription({
                       <Select
                         labelId="embed-type-label"
                         value={embedView}
+                        size="small"
                         label="Embed Type"
                         onChange={e => {
                           setEmbedView(e.target.value);
