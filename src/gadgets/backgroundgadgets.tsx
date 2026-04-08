@@ -78,9 +78,6 @@ export function BackgroundRunning({ embedDialogOpen = false }) {
     const capturedTable = tableInstance;
     const selectedRows = capturedTable.getSelectedRowModel().rows;
     const selectedIds = new Set(selectedRows.map(r => r.original.id)) as Set<string>;
-    const localStorageInstances: any[] = JSON.parse(
-      localStorage.getItem('headlamp_embeded_resources') || '[]'
-    );
 
     // Separate instances that need an API call (headless) from those that don't
     const toDeleteLocally = new Set<string>();
@@ -89,10 +86,10 @@ export function BackgroundRunning({ embedDialogOpen = false }) {
     selectedIds.forEach(id => {
       const instance = (runningInstances || []).find(i => i.id === id);
       if (!instance) return;
-      if (instance.isHeadless !== undefined && !instance.isHeadless) {
-        toDeleteLocally.add(id);
-      } else {
+      if (instance.isHeadless) {
         toDeleteRemotely.push({ id, name: instance.name || id.slice(-8) });
+      } else {
+        toDeleteLocally.add(id);
       }
     });
 
@@ -103,7 +100,15 @@ export function BackgroundRunning({ embedDialogOpen = false }) {
 
     const finalizeDelete = () => {
       const allDeletedIds = new Set([...toDeleteLocally, ...remoteDeletedIds]);
-      const updatedStorage = localStorageInstances.filter(i => !allDeletedIds.has(i.id));
+      let latestLocalStorageInstances: any[] = [];
+      try {
+        const stored = localStorage.getItem('headlamp_embeded_resources');
+        const parsed = stored ? JSON.parse(stored) : [];
+        latestLocalStorageInstances = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        latestLocalStorageInstances = [];
+      }
+      const updatedStorage = latestLocalStorageInstances.filter(i => !allDeletedIds.has(i.id));
       localStorage.setItem('headlamp_embeded_resources', JSON.stringify(updatedStorage));
       setRunningInstances(prev => (prev || []).filter(i => !allDeletedIds.has(i.id)));
       capturedTable.resetRowSelection();
@@ -117,8 +122,13 @@ export function BackgroundRunning({ embedDialogOpen = false }) {
     }
 
     if (!ig) {
-      enqueueSnackbar('Not connected to gadget API. Please try again.', { variant: 'error' });
-      setOpenConfirmDialog(false);
+      enqueueSnackbar(
+        toDeleteLocally.size > 0
+          ? 'Not connected to gadget API. Local instances were deleted, but remote instances could not be deleted.'
+          : 'Not connected to gadget API. Remote instances could not be deleted. Please try again.',
+        { variant: 'error' }
+      );
+      finalizeDelete();
       return;
     }
 

@@ -71,10 +71,6 @@ const RunningGadgetsForResource = ({ resource, open }) => {
   const confirmDeleteInstance = () => {
     if (!instanceToDelete) return;
 
-    const localStorageInstances: any[] = JSON.parse(
-      localStorage.getItem('headlamp_embeded_resources') || '[]'
-    );
-
     const instance = (gadgetInstances || []).find(i => i.id === instanceToDelete);
     if (!instance) {
       setInstanceToDelete(null);
@@ -83,7 +79,15 @@ const RunningGadgetsForResource = ({ resource, open }) => {
     }
 
     const removeFromStorage = (id: string) => {
-      const updated = localStorageInstances.filter(i => i.id !== id);
+      let current: any[] = [];
+      try {
+        const stored = localStorage.getItem('headlamp_embeded_resources');
+        const parsed = stored ? JSON.parse(stored) : [];
+        current = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        current = [];
+      }
+      const updated = current.filter(i => i.id !== id);
       localStorage.setItem('headlamp_embeded_resources', JSON.stringify(updated));
       setGadgetInstances(prev => (prev || []).filter(i => i.id !== id));
       setInstanceToDelete(null);
