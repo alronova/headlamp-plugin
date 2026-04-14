@@ -1,5 +1,5 @@
 import { ConfirmDialog, Loader, SectionBox } from '@kinvolk/headlamp-plugin/lib/components/common';
-import { K8s } from '@kinvolk/headlamp-plugin'
+import { K8s } from '@kinvolk/headlamp-plugin';
 import { getCluster, getClusterPrefixedPath } from '@kinvolk/headlamp-plugin/lib/Utils';
 import { Box, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
