@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* eslint-disable no-param-reassign, eqeqeq, no-unused-vars */
+/* eslint-disable no-param-reassign, eqeqeq, no-unused-vars -- Required for the embedded Go WASM runtime/polyfill code in this file, which intentionally uses parameter reassignment, loose equality checks, and compatibility signatures with unused arguments. */
 
 'use strict';
 
